@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>걸스인텍 × IWE 분기별 회고 · 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
+<style>
+  :root {
+    --git-red: #EF4136;
+    --git-orange: #FF6B4A;
+    --iwe-purple: #6B46C1;
+    --iwe-light: #A78BFA;
+    --iwe-soft: #E9D5FF;
+    --bg-warm: #FFF5F0;
+    --bg-cool: #F5F0FF;
+    --card-bg: #FFFFFF;
+    --text: #2A2A2A;
+    --muted: #71717A;
+    --border: #F3E8E8;
+    --shadow: 0 4px 24px rgba(0,0,0,0.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif; color: var(--text); }
+  body {
+    background: linear-gradient(135deg, var(--bg-warm) 0%, var(--bg-cool) 100%);
+    min-height: 100vh;
+    padding: 24px 16px 60px;
+    line-height: 1.55;
+  }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  /* Header */
+  header { text-align: center; padding: 32px 16px 24px; }
+  .logo-row { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 18px; flex-wrap: wrap; }
+  .logo-pill {
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+  .logo-pill.git { background: var(--git-red); color: white; }
+  .logo-pill.iwe { background: var(--iwe-soft); color: var(--iwe-purple); }
+  header h1 {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--git-red) 0%, var(--iwe-purple) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  header p { color: var(--muted); font-size: 1rem; }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 24px;
+    padding: 6px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    overflow-x: auto;
+  }
+  .tab {
+    flex: 1;
+    min-width: 90px;
+    padding: 12px 18px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--muted);
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    white-space: nowrap;
+  }
+  .tab:hover { color: var(--git-red); }
+  .tab.active {
+    background: linear-gradient(135deg, var(--git-red) 0%, var(--iwe-purple) 100%);
+    color: white;
+    box-shadow: 0 4px 14px rgba(239,65,54,0.3);
+  }
+
+  .panel { display: none; animation: fadeIn 0.25s ease; }
+  .panel.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Card */
+  .card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 26px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow);
+  }
+  .card h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card h2::before {
+    content: '';
+    display: inline-block;
+    width: 5px;
+    height: 22px;
+    background: linear-gradient(180deg, var(--git-red), var(--iwe-purple));
+    border-radius: 3px;
+  }
+  .card-sub { color: var(--muted); font-size: 0.95rem; margin-bottom: 16px; }
+
+  /* Trend / Summary */
+  .trend {
+    background: linear-gradient(135deg, var(--git-red) 0%, var(--iwe-purple) 100%);
+    color: white;
+    border-radius: 20px;
+    padding: 28px;
+    margin-bottom: 18px;
+    box-shadow: 0 8px 28px rgba(107,70,193,0.18);
+  }
+  .trend h2 { color: white; }
+  .trend h2::before { background: white; }
+  .trend-text { font-size: 1rem; line-height: 1.6; opacity: 0.96; margin-top: 6px; }
+  .trend-text b { background: rgba(255,255,255,0.18); padding: 2px 8px; border-radius: 8px; font-weight: 700; }
+
+  .keyword-cloud { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .kw {
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.28);
+    padding: 6px 13px;
+    border-radius: 16px;
+    backdrop-filter: blur(8px);
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  .kw.lg { font-size: 1.2rem; font-weight: 700; padding: 9px 18px; }
+  .kw.md { font-size: 1.05rem; font-weight: 600; padding: 8px 16px; }
+
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 18px; }
+  .stat {
+    background: rgba(255,255,255,0.15);
+    padding: 14px;
+    border-radius: 14px;
+    text-align: center;
+    backdrop-filter: blur(8px);
+  }
+  .stat .num { font-size: 1.8rem; font-weight: 800; line-height: 1; }
+  .stat .lbl { font-size: 0.82rem; opacity: 0.9; margin-top: 4px; }
+
+  /* Form */
+  .form-group { margin-bottom: 14px; }
+  .form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-size: 0.93rem;
+  }
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    background: #FAFAFA;
+    transition: all 0.2s;
+    color: var(--text);
+  }
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--iwe-purple);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(167,139,250,0.18);
+  }
+  .form-group textarea { min-height: 78px; resize: vertical; line-height: 1.5; }
+  .form-group .hint { color: var(--muted); font-size: 0.82rem; margin-top: 4px; }
+
+  button.submit {
+    background: linear-gradient(135deg, var(--git-red) 0%, var(--iwe-purple) 100%);
+    color: white;
+    border: none;
+    padding: 13px 28px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    width: 100%;
+    font-family: inherit;
+    box-shadow: 0 4px 14px rgba(239,65,54,0.25);
+  }
+  button.submit:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(239,65,54,0.32); }
+  button.submit:active { transform: translateY(0); }
+  button.submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  /* Entries grid */
+  .entries-grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  }
+  .entry {
+    background: linear-gradient(135deg, #FFF8F4 0%, #F8F2FF 100%);
+    border-radius: 16px;
+    padding: 18px;
+    border: 1px solid rgba(0,0,0,0.04);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .entry:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,0,0,0.06); }
+  .entry .name {
+    font-weight: 700;
+    font-size: 1.08rem;
+    background: linear-gradient(135deg, var(--git-red), var(--iwe-purple));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+  .entry .field { margin-bottom: 9px; }
+  .entry .field-label {
+    font-size: 0.72rem;
+    color: var(--iwe-purple);
+    font-weight: 700;
+    margin-bottom: 2px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .entry .field-content {
+    font-size: 0.9rem;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    color: #3F3F46;
+  }
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+  .tag {
+    background: white;
+    border: 1px solid var(--iwe-light);
+    color: var(--iwe-purple);
+    padding: 3px 9px;
+    border-radius: 10px;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+
+  .empty { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 0.95rem; }
+
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--text);
+    color: white;
+    padding: 12px 22px;
+    border-radius: 12px;
+    font-size: 0.92rem;
+    font-weight: 500;
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 100;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .config-warn {
+    background: #FEF3C7;
+    color: #92400E;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    margin-bottom: 14px;
+    border-left: 3px solid #F59E0B;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 40px;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  footer .heart { color: var(--git-red); }
+
+  @media (max-width: 600px) {
+    body { padding: 16px 10px 40px; }
+    .card { padding: 20px; }
+    .trend { padding: 22px; }
+    .stats { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .stat .num { font-size: 1.5rem; }
+    .tabs { padding: 4px; }
+    .tab { padding: 10px 12px; font-size: 0.88rem; min-width: 70px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="logo-row">
+      <span class="logo-pill git">Girls in Tech KOR</span>
+      <span class="logo-pill iwe">in We</span>
+    </div>
+    <h1>분기별 회고 · 2026</h1>
+    <p>붉은 말의 해 🐎 우리의 한 해를 함께 기록해요</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab" data-panel="q1">1분기</button>
+    <button class="tab active" data-panel="q2">2분기 (지금)</button>
+    <button class="tab" data-panel="q3">3분기</button>
+    <button class="tab" data-panel="q4">4분기</button>
+  </div>
+
+  <!-- 1분기 -->
+  <div class="panel" id="panel-q1">
+    <div class="card">
+      <h2>📌 2026 새해 목표</h2>
+      <p class="card-sub">2026/1/12 · 병오년 · To-do: 4월에 진행현황 다시 확인해보기!</p>
+      <div class="entries-grid" id="q1-entries"></div>
+    </div>
+    <div class="card">
+      <h2>💡 1분기 꿀팁 모음</h2>
+      <div class="entries-grid">
+        <div class="entry">
+          <div class="name">언어 공부 꿀팁 (유진)</div>
+          <div class="field-content">듀오링고 + 영어학원 + TED. 출퇴근 노래 대신 일단 듣고, 안 들리면 또 듣고.</div>
+        </div>
+        <div class="entry">
+          <div class="name">스피치 (지영)</div>
+          <div class="field-content">토스트마스터 커뮤니티. 한 명이 스피치하면 기록해서 피드백 주는 구조.</div>
+        </div>
+        <div class="entry">
+          <div class="name">노잼일 때 (재령)</div>
+          <div class="field-content">중국드라마를 봐라! EBS 초급 중국어 + 오디오 유료구독. 숏폼(세로) 드라마는 아저씨들이 많이 봄.</div>
+        </div>
+        <div class="entry">
+          <div class="name">고전 추천 (현승)</div>
+          <div class="field-content">"최소한의 삼국지" 추천!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2분기 -->
+  <div class="panel active" id="panel-q2">
+    <div class="trend" id="q2-trend">
+      <h2>✨ 이번 분기 트렌드</h2>
+      <p class="trend-text" id="q2-summary-text">아직 기록이 부족해요. 모두가 입력하면 키워드와 트렌드가 자동으로 정리돼요.</p>
+      <div class="keyword-cloud" id="q2-keywords"></div>
+      <div class="stats">
+        <div class="stat"><div class="num" id="q2-count">0</div><div class="lbl">제출 완료</div></div>
+        <div class="stat"><div class="num">16</div><div class="lbl">전체 인원</div></div>
+        <div class="stat"><div class="num" id="q2-percent">0%</div><div class="lbl">참여율</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>✏️ 내 회고 작성하기</h2>
+      <p class="card-sub">자유롭게! 빈 칸은 비워두셔도 괜찮아요.</p>
+      <div id="config-warn-box"></div>
+      <form id="q2-form">
+        <div class="form-group">
+          <label>이름 *</label>
+          <input type="text" id="q2-name" placeholder="예: 연희" required maxlength="20">
+        </div>
+        <div class="form-group">
+          <label>1분기 목표는 어떻게 진행되고 있나요?</label>
+          <textarea id="q2-progress" placeholder="새해에 세웠던 목표가 어떻게 흘러가고 있는지 솔직하게 적어주세요"></textarea>
+        </div>
+        <div class="form-group">
+          <label>2분기에 새로 집중하거나 시도할 것</label>
+          <textarea id="q2-focus" placeholder="새로운 목표, 도전, 시도하고 싶은 것"></textarea>
+        </div>
+        <div class="form-group">
+          <label>요즘 빠져있는 것 / 모두에게 추천하고 싶은 것</label>
+          <textarea id="q2-recommend" placeholder="책, 드라마, 운동, 강의, 꿀팁 무엇이든!"></textarea>
+        </div>
+        <div class="form-group">
+          <label>이번 분기 한 줄 키워드</label>
+          <input type="text" id="q2-keyword" placeholder="예: 기록, 성장, 도전 (콤마/공백/# 모두 OK)">
+          <div class="hint">트렌드 분석에 사용돼요. 1~5개 자유롭게!</div>
+        </div>
+        <button type="submit" class="submit" id="q2-submit">제출하기 ✨</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>👥 모두의 2분기 회고</h2>
+      <div class="entries-grid" id="q2-entries">
+        <div class="empty">아직 제출된 회고가 없어요.<br>첫 번째 주인공이 되어주세요! 🌱</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3, 4분기 -->
+  <div class="panel" id="panel-q3">
+    <div class="card">
+      <h2>3분기 회고</h2>
+      <p class="card-sub">3분기 미팅 때 다시 만나요! 🌳</p>
+    </div>
+  </div>
+  <div class="panel" id="panel-q4">
+    <div class="card">
+      <h2>4분기 회고</h2>
+      <p class="card-sub">한 해 마무리는 4분기에! 🎄</p>
+    </div>
+  </div>
+
+  <footer>
+    Made with <span class="heart">♥</span> for Girls in Tech KOR × IWE
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Firebase + 앱 로직 -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, onValue, push, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+  // ====== Firebase 설정 ======
+  // README.md 의 가이드를 따라 본인 프로젝트의 값으로 교체하세요.
+  // 미설정 상태에서도 localStorage 로 임시 동작합니다.
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
+    projectId: "YOUR_PROJECT",
+    storageBucket: "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "YOUR_SENDER",
+    appId: "YOUR_APP_ID"
+  };
+
+  const useFirebase = !firebaseConfig.apiKey.startsWith("YOUR");
+  let db = null;
+  if (useFirebase) {
+    try {
+      const app = initializeApp(firebaseConfig);
+      db = getDatabase(app);
+    } catch (e) {
+      console.warn("Firebase 초기화 실패, localStorage로 동작합니다.", e);
+    }
+  } else {
+    document.getElementById('config-warn-box').innerHTML =
+      '<div class="config-warn">⚠️ Firebase 미설정 상태예요. 지금은 이 브라우저에만 저장됩니다. README.md 가이드에 따라 설정하면 16명이 실시간으로 함께 쓸 수 있어요.</div>';
+  }
+
+  // ====== 1분기 데이터 ======
+  const q1Data = [
+    { name: '연희', focus: '재테크 · AI · 사이드 프로젝트', text: '사이드 플젝 2개 하고 번아웃이라 이제 계획 세울 예정. 재테크, AI! 개발뿐만 아니라 시장에 내놓을 수 있는 프로덕트 내보자 (구체화 예정)', tags: ['AI','재테크','프로덕트'] },
+    { name: '빛나', focus: '요가 · AI 디자인 강의 · 커리어', text: '월수금 새벽요가, 강의(온오프라인)에 밀린 유튜브 해야... 프리랜서로서 AI 이슈되며 커리어가 어디로 가야할지 고민. 디자인교육인데 AI 관련 강의 수요 있지만 향후 몇 년은 모름.', tags: ['요가','AI강의','커리어'] },
+    { name: '다은', focus: '키워드 "다작"', text: '얼마 전 초5 때 일기 발견. 일기 자주 쓰자. 2주간 내면의 목소리 듣기. 작곡/성악/보컬 박사님께 배우는 중. 8마디라도 연습. 다시 음악으로 가는 방향. 마음의 색깔이 분명해졌다.', tags: ['다작','일기','음악'] },
+    { name: '재령', focus: '키워드 "기록" · 중국어', text: '창업했던 팀에서 독립. 누구든 크리에이터가 되어야. 경험을 바깥으로 드러내는 게 중요. 조금씩 꾸준하게 기록. 중드로 시작된 중국어 공부. 인생 노잼일 땐 중드를 봐라!', tags: ['기록','중국어','크리에이터'] },
+    { name: '유진', focus: '다이어트 · 모닝페이지 · 편지', text: '오래된 계획 다이어트 유지중. 일기/모닝페이지 매일 빠짐없이 쓰기 성공! 침착하게 천천히 살자. 주변사람에게 편지 최소 5장 써보기.', tags: ['다이어트','모닝페이지','편지'] },
+    { name: '지영', focus: '수익 · 전시 · 해외취업', text: '수익 파이프라인 안정화 (외주 프리랜서). 악기 중급 잘하기, 개인 전시 해보기. 한국 아닌 다른 곳에서 살고 싶다 - 해외취업 준비. 호주 거주 중.', tags: ['프리랜서','전시','해외취업'] },
+    { name: '현승', focus: '키워드 "3" (300번)', text: "24년 '지속' → 25년 '도전' → 26년 '3'. 통계적으로 300이 유의미한 숫자. 300번의 콘텐츠 발행, 300번의 기회 발굴. 30대 중반 넘어가면서 소식. 고전 '최소한의 삼국지' 추천.", tags: ['300','콘텐츠','소식'] },
+    { name: '채원', focus: '논문 · 영어 · 일본어', text: '대학원 박사과정 코스 끝나서 논문 써야. 영어공부 + 일본 와보니 일본어도. 곤니찌와~ 일본 결혼식은 5시간! 말 안통해 길에서 울기도.', tags: ['논문','영어','일본어'] },
+    { name: '연주', focus: '둘째 · 영업 · 독서모임', text: '원대한 가족계획 둘째! 회사에서 영업팀으로 옮김, 실적 내는 게 목표. 사이드 프로젝트로 부모 대상 유료 독서모임. 잘되면 프리랜서 전환 예정. 무제한 책 읽기!', tags: ['둘째','영업','독서'] },
+    { name: '태이', focus: '이직 · 결혼자금 · 다이어트', text: '(1) 이직 성공 - 더 큰 시스템 갖춘 회사로. (2) 결혼자금 - 연봉 1/3 저축, 부동산 공부, 임장. (3) 다이어트 8kg 감량. 인생 왜 이렇게 숙제가 많지?', tags: ['이직','결혼자금','다이어트'] },
+    { name: '나윤', focus: '운동 · 자기계발', text: '너무 바쁘게 회사일만 하지 않고 다시 열심히 개인목표 이루기. 꾸준한 운동과 자기계발!', tags: ['운동','자기계발'] }
+  ];
+
+  // ====== 1분기 렌더링 ======
+  const q1Grid = document.getElementById('q1-entries');
+  q1Data.forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'entry';
+    el.innerHTML = `
+      <div class="name">${escapeHtml(d.name)}</div>
+      <div class="field"><div class="field-label">올해의 방향</div><div class="field-content">${escapeHtml(d.focus)}</div></div>
+      <div class="field"><div class="field-label">메모</div><div class="field-content">${escapeHtml(d.text)}</div></div>
+      <div class="tags">${d.tags.map(t=>`<span class="tag">#${escapeHtml(t)}</span>`).join('')}</div>
+    `;
+    q1Grid.appendChild(el);
+  });
+
+  // ====== 탭 전환 ======
+  document.querySelectorAll('.tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('panel-' + btn.dataset.panel).classList.add('active');
+    });
+  });
+
+  // ====== Toast ======
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2400);
+  }
+
+  // ====== Util ======
+  function escapeHtml(s) {
+    if (s == null) return '';
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function parseTags(s) {
+    if (!s) return [];
+    return s.split(/[\s,#·\/]+/).map(x => x.trim()).filter(x => x && x.length <= 15);
+  }
+  // 한국어/영어 단어 추출 (불용어 제외)
+  const STOPWORDS = new Set(['그리고','그러나','하지만','이번','오늘','내일','이런','저런','정말','너무','조금','많이','대해','위해','으로','에서','부터','까지','때문','때문에','거의','우리','저희','자기','자기계발','관련','계속','다시','이제','그런','이건','저건','어떤','무슨','이거','저거','그게','이게','이렇게','저렇게','진짜','약간','그냥','뭔가','뭐가','이런거','저런거','입니다','있어요','없어요','이다','된다','한다','같다','보다','보고','하기','하면','하지','이런게','지금','계획','목표','올해','내년','작년','주제','요즘','일단','제가','저는','내가','나는','하면서','해서','해야','해보','만들','시작','중요','마음','사람','인생','회사','업무','시간','정도','경험','도전','지속','성장','기록','다작','집중','꾸준','노력','연습','준비','진행','상황','분기']);
+  function extractWords(text) {
+    if (!text) return [];
+    const tokens = text.match(/[가-힣]{2,8}|[A-Za-z]{3,15}/g) || [];
+    return tokens.filter(t => !STOPWORDS.has(t.toLowerCase()) && !STOPWORDS.has(t));
+  }
+
+  // ====== 폼 제출 ======
+  const form = document.getElementById('q2-form');
+  const submitBtn = document.getElementById('q2-submit');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const entry = {
+      name: document.getElementById('q2-name').value.trim(),
+      progress: document.getElementById('q2-progress').value.trim(),
+      focus: document.getElementById('q2-focus').value.trim(),
+      recommend: document.getElementById('q2-recommend').value.trim(),
+      keyword: document.getElementById('q2-keyword').value.trim(),
+      ts: Date.now()
+    };
+    if (!entry.name) { toast('이름을 적어주세요'); return; }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = '저장 중...';
+
+    try {
+      if (useFirebase && db) {
+        const newRef = push(ref(db, 'q2/entries'));
+        await set(newRef, entry);
+      } else {
+        const list = JSON.parse(localStorage.getItem('q2-entries') || '[]');
+        list.push(entry);
+        localStorage.setItem('q2-entries', JSON.stringify(list));
+        renderQ2(list);
+      }
+      form.reset();
+      toast('회고가 저장되었어요 ✨');
+    } catch (err) {
+      console.error(err);
+      toast('저장 실패: ' + err.message);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = '제출하기 ✨';
+    }
+  });
+
+  // ====== 렌더링 ======
+  function renderQ2(entries) {
+    const grid = document.getElementById('q2-entries');
+    grid.innerHTML = '';
+    if (!entries || !entries.length) {
+      grid.innerHTML = '<div class="empty">아직 제출된 회고가 없어요.<br>첫 번째 주인공이 되어주세요! 🌱</div>';
+    } else {
+      entries.slice().sort((a,b) => (b.ts||0) - (a.ts||0)).forEach(e => {
+        const tags = parseTags(e.keyword);
+        const el = document.createElement('div');
+        el.className = 'entry';
+        el.innerHTML = `
+          <div class="name">${escapeHtml(e.name)}</div>
+          ${e.progress ? `<div class="field"><div class="field-label">1분기 진행</div><div class="field-content">${escapeHtml(e.progress)}</div></div>` : ''}
+          ${e.focus ? `<div class="field"><div class="field-label">2분기 집중</div><div class="field-content">${escapeHtml(e.focus)}</div></div>` : ''}
+          ${e.recommend ? `<div class="field"><div class="field-label">추천</div><div class="field-content">${escapeHtml(e.recommend)}</div></div>` : ''}
+          ${tags.length ? `<div class="tags">${tags.map(t=>`<span class="tag">#${escapeHtml(t)}</span>`).join('')}</div>` : ''}
+        `;
+        grid.appendChild(el);
+      });
+    }
+    updateSummary(entries || []);
+  }
+
+  function updateSummary(entries) {
+    document.getElementById('q2-count').textContent = entries.length;
+    document.getElementById('q2-percent').textContent = Math.round(entries.length / 16 * 100) + '%';
+
+    // 명시 키워드 + 본문 단어 빈도
+    const counter = {};
+    entries.forEach(e => {
+      const tags = parseTags(e.keyword);
+      tags.forEach(t => { counter[t] = (counter[t] || 0) + 2; }); // 명시 키워드는 가중치 2
+      const bodyWords = [
+        ...extractWords(e.progress),
+        ...extractWords(e.focus),
+        ...extractWords(e.recommend)
+      ];
+      bodyWords.forEach(w => { counter[w] = (counter[w] || 0) + 1; });
+    });
+
+    const sorted = Object.entries(counter).sort((a,b) => b[1] - a[1]);
+    const cloud = document.getElementById('q2-keywords');
+    cloud.innerHTML = '';
+    sorted.slice(0, 18).forEach(([word, cnt]) => {
+      const span = document.createElement('span');
+      span.className = 'kw' + (cnt >= 5 ? ' lg' : cnt >= 3 ? ' md' : '');
+      span.textContent = `#${word}` + (cnt > 1 ? ` ${cnt}` : '');
+      cloud.appendChild(span);
+    });
+
+    const sumEl = document.getElementById('q2-summary-text');
+    if (entries.length === 0) {
+      sumEl.textContent = '아직 기록이 부족해요. 모두가 입력하면 키워드와 트렌드가 자동으로 정리돼요.';
+    } else {
+      const top = sorted.slice(0,3).map(s => `#${s[0]}`).join(' · ');
+      const recommendCnt = entries.filter(e => e.recommend).length;
+      let extra = '';
+      if (entries.length >= 8) {
+        extra = ` 절반 이상의 멤버가 기록을 남겼어요 🎉`;
+      }
+      if (recommendCnt >= 3) {
+        extra += ` 추천 콘텐츠가 ${recommendCnt}개 모였습니다.`;
+      }
+      sumEl.innerHTML = `${entries.length}명이 기록을 남겼어요. ` +
+        (top ? `이번 분기는 <b>${escapeHtml(top)}</b> 키워드가 가장 많이 등장하고 있어요.` : '') + extra;
+    }
+  }
+
+  // ====== 데이터 구독 ======
+  if (useFirebase && db) {
+    onValue(ref(db, 'q2/entries'), (snap) => {
+      const data = snap.val() || {};
+      const list = Object.values(data);
+      renderQ2(list);
+    }, (err) => {
+      console.error('DB 읽기 오류:', err);
+      toast('데이터 읽기 오류: ' + err.message);
+    });
+  } else {
+    const list = JSON.parse(localStorage.getItem('q2-entries') || '[]');
+    renderQ2(list);
+  }
+</script>
+</body>
+</html>
